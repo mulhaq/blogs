@@ -1,0 +1,170 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                    STREAMING LLM - QUICK START GUIDE                      ║
+║                                                                           ║
+║          Spring Boot + Groq API + Server-Sent Events (SSE)               ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+📋 PREREQUISITES
+═══════════════════════════════════════════════════════════════════════════
+
+✓ Java 21 or later
+✓ Maven 3.8 or later  
+✓ Groq API key (free from https://console.groq.com)
+
+Check versions:
+  java -version    # Should show Java 21+
+  mvn -version     # Should show Maven 3.8+
+
+
+🚀 RUN IT IN 3 STEPS
+═══════════════════════════════════════════════════════════════════════════
+
+1️⃣  Set your Groq API key:
+
+    export GROQ_API_KEY="gsk_your_api_key_here"
+
+    (Windows PowerShell):
+    $env:GROQ_API_KEY="gsk_your_api_key_here"
+
+
+2️⃣  Start the server:
+
+    cd /workspace/java-streaming-llm
+    mvn clean spring-boot:run
+
+    On first run, Maven downloads ~300MB of dependencies (2-5 minutes).
+    Look for: "Started StreamingLlmApplication in X.XXXs"
+
+
+3️⃣  Open in browser:
+
+    http://localhost:8080
+
+    Type a message and press Enter. Watch tokens stream in real-time! 🎬
+
+
+🧪 TEST WITH CURL
+═══════════════════════════════════════════════════════════════════════════
+
+curl -X POST http://localhost:8080/api/chat/stream \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Explain quantum computing briefly"}'
+
+Expected output:
+  data: {"token": "Quantum"}
+  data: {"token": " computing"}
+  ...
+  data: [DONE]
+
+
+⚙️  CONFIGURATION
+═══════════════════════════════════════════════════════════════════════════
+
+Edit src/main/resources/application.properties to customize:
+
+  server.port=8080
+    → Change port (default: 8080)
+
+  spring.ai.openai.chat.options.model=llama-3.3-70b-versatile
+    → Change model (other Groq models available)
+
+  # SSE timeout in ChatController.java line 20
+  private static final long SSE_TIMEOUT_MS = 30000;
+    → Increase to 60000 for longer responses (60 seconds)
+
+
+🏗️  PROJECT STRUCTURE
+═══════════════════════════════════════════════════════════════════════════
+
+java-streaming-llm/
+├── pom.xml                          # Maven dependencies
+├── README.md                        # Full documentation
+└── src/main/
+    ├── java/com/mulhaq/streaming/
+    │   ├── StreamingLlmApplication.java    # Spring Boot entry
+    │   └── controller/ChatController.java  # SSE endpoint
+    └── resources/
+        ├── application.properties          # Configuration
+        └── static/index.html               # Frontend
+
+
+📚 KEY CONCEPTS
+═══════════════════════════════════════════════════════════════════════════
+
+Server-Sent Events (SSE)
+  • HTTP 1.1 standard for server→client streaming
+  • One-way push (unlike WebSockets)
+  • Native browser support (no extra libraries)
+
+Spring AI ChatClient
+  • Abstraction over LLM providers (Groq, OpenAI, Anthropic, etc.)
+  • Uses OpenAI-compatible API format
+  • Reactive streams with Project Reactor
+
+Virtual Threads (Java 21)
+  • Lightweight "green" threads
+  • Millions of concurrent connections
+  • Much better than traditional thread pools
+
+
+❌ TROUBLESHOOTING
+═══════════════════════════════════════════════════════════════════════════
+
+"API key not found"
+  → Run: export GROQ_API_KEY="your-key"
+  → Verify: echo $GROQ_API_KEY
+
+"Port 8080 already in use"
+  → Change in application.properties: server.port=8081
+
+"Connection timeout after 30 seconds"
+  → Increase SSE_TIMEOUT_MS in ChatController.java
+  → Or use a faster/shorter prompt
+
+"mvn: command not found"
+  → Install Maven: https://maven.apache.org/download.cgi
+  → Add to PATH
+
+"Connection refused on localhost:8080"
+  → Verify server is running (check terminal for "Started..." message)
+  → Check for port conflicts: lsof -i :8080 (macOS/Linux)
+
+
+📖 DOCUMENTATION
+═══════════════════════════════════════════════════════════════════════════
+
+• README.md           - Full project documentation
+• PROJECT_SUMMARY.txt - Build & architecture notes
+• FILES_MANIFEST.txt  - Detailed file descriptions
+
+Inside the code:
+• ChatController.java - Well-commented SSE streaming logic
+• index.html          - Frontend with vanilla JS SSE parsing
+
+
+🚀 NEXT STEPS
+═══════════════════════════════════════════════════════════════════════════
+
+✓ Test locally (you are here!)
+✓ Modify prompts/behavior in index.html JavaScript
+✓ Add database support for conversation history
+✓ Deploy to cloud (Heroku, Railway, AWS, etc.)
+✓ Add authentication/rate limiting
+✓ Create blog post explaining the implementation
+
+
+📞 SUPPORT
+═══════════════════════════════════════════════════════════════════════════
+
+Need help?
+• Check README.md troubleshooting section
+• Review ChatController.java for error handling patterns
+• Groq API docs: https://console.groq.com/docs
+• Spring AI docs: https://docs.spring.io/spring-ai/
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+                    That's it! Enjoy streaming LLM responses! 🎉
+
+═══════════════════════════════════════════════════════════════════════════
