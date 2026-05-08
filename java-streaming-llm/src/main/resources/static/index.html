@@ -376,8 +376,8 @@
                     buffer = lines.pop() || '';
 
                     for (const line of lines) {
-                        if (line.startsWith('data: ')) {
-                            const data = line.slice(6);
+                        if (line.startsWith('data:')) {
+                            const data = line.startsWith('data: ') ? line.slice(6) : line.slice(5);
 
                             if (data === '[DONE]') {
                                 // Stream complete
@@ -411,8 +411,8 @@
                 }
 
                 // Process remaining buffer
-                if (buffer && buffer.startsWith('data: ')) {
-                    const data = buffer.slice(6);
+                if (buffer && buffer.startsWith('data:')) {
+                            const data = buffer.startsWith('data: ') ? buffer.slice(6) : buffer.slice(5);
                     if (data !== '[DONE]') {
                         try {
                             const parsed = JSON.parse(data);
