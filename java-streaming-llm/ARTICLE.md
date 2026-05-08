@@ -13,6 +13,14 @@ cover_image: "A split-screen showing: (left) a terminal with Spring Boot logs st
 
 ---
 
+## What We're Building
+
+![The finished app — dark theme chat UI with streaming LLM responses](./screenshots/app-homepage.png)
+
+*The finished app: a dark-theme chat UI that streams LLM responses token by token via Groq API.*
+
+---
+
 ## The Problem
 
 You've seen it a hundred times: ChatGPT typing out an answer word by word. Your users expect that now. But when you try to bolt LLM streaming onto your Spring Boot backend, you hit a wall.
@@ -672,6 +680,16 @@ Create `src/main/resources/static/index.html`:
 ```
 
 Navigate to `http://localhost:8080`, type a question, and watch tokens stream in.
+
+**What you'll see when you send a message:**
+
+![User message sent, loading spinner appears while waiting for first token](./screenshots/app-loading.png)
+
+*The spinner appears immediately after sending — the request is live, waiting for the first token from Groq.*
+
+![Full streamed response rendered in the chat UI](./screenshots/app-response-final.png)
+
+*Once streaming completes, the full response is visible. Each token appeared one by one as it arrived.*
 
 ---
 
